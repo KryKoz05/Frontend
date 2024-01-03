@@ -1,7 +1,7 @@
-def imageName="192.168.44.44:8082/docker_registry/frontend"
+def imageName="<krykoz05>/frontend"
 def dockerTag=""
-def dockerRegistry="https://192.168.44.44:8082"
-def registryCredentials="artifactory"
+def dockerRegistry=""
+def registryCredentials="dockerhub"
 
 pipeline {
     agent {
@@ -63,4 +63,8 @@ pipeline {
             cleanWs()
         }
     }
+    
+    success {
+            build job: 'app_of_apps', parameters: [ string(name: 'frontendDockerTag', value: "$dockerTag")], wait: false
+        }
 }
