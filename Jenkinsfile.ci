@@ -1,0 +1,35 @@
+pipeline {
+    agent { label 'python' }
+
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 10, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Install dependencies') {
+            steps {
+                sh '''
+                    python3 --version
+                    python3 -m venv --clear .venv
+                    .venv/bin/python -m pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                sh '''
+                    mkdir -p test-results
+                    .venv/bin/python -m pytest -v test_app.py \
+                        --junitxml=test-results/pytest.xml
+                '''
+            }
+            post {
+                always {
+                    junit 'test-results/pytest.xml'
+                }
+            }
+        }
+    }
+}
