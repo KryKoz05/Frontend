@@ -9,13 +9,13 @@ log = []
 
 def get_animals():
     log.append("[FRONTEND] Getting animals from backend")
-    return requests.get(url=backend_URL).json()
+    return requests.get(url=backend_URL, timeout=3).json()
 
 
 def add_animal(animal: str, name: str):
     log.append(f"[FRONTEND] Adding Name: {name} Animal: {animal} to database")
     payload = {'name': name, 'animal': animal}
-    response = requests.post(backend_URL, data=payload)
+    response = requests.post(backend_URL, data=payload, timeout=3)
     log.append(response.text)
 
 
@@ -28,6 +28,13 @@ def index():
             add_animal(request.form["animal"], request.form["name"])
     return render_template("index.html", log=log)
 
+@app.errorhandler(requests.exceptions.RequestException)
+def handle_backend_error(error):
+    app.logger.warning("Backend request failed: %s", error)
+    return (
+        "Backend jest chwilowo niedostępny. Spróbuj ponownie za chwilę.",
+        503,
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
