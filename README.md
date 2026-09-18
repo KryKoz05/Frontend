@@ -17,3 +17,15 @@ By selecting different branches you can get the sample code that you should have
 | tests | Testy | Added unit tests and requirements |
 | jenkinsfile | CI/CD 4 | Added Jenkinsfile, sonarqube project properties|
 | final | CI/CD 7 | Dockerhub deployment and app_of_apps trigger|
+
+## Continuous integration
+
+Jenkins runs four frontend tests on a dedicated Python agent.
+The pipeline is defined in Jenkinsfile.ci and polls the repository
+for changes every two minutes.
+
+Tests cover:
+- Loading the homepage.
+- Passing form data to the add-animal function.
+- Displaying animals returned by the backend.
+- Returning HTTP 503 when the backend connection fails.
