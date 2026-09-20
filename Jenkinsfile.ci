@@ -34,5 +34,20 @@ pipeline {
                 }
             }
         }
+        stage('Build image') {
+            steps {
+                sh 'docker build -t portfolio-frontend:ci-${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Test image') {
+            steps {
+                sh '''
+                    docker run --rm \
+                        portfolio-frontend:ci-${BUILD_NUMBER} \
+                        python -m pytest -v test_app.py
+                '''
+            }
+        }
     }
 }
