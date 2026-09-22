@@ -35,6 +35,9 @@ def handle_backend_error(error):
         "Backend jest chwilowo niedostępny. Spróbuj ponownie za chwilę.",
         503,
     )
+@app.route("/version", methods=["GET"])
+def version():
+    return {"version": "2.0.0"}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
